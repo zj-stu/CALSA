@@ -42,6 +42,30 @@
  cd CALS
 ```
 ---
+## 🛠️Prerequisites
+- Python 3.8 or above
+- Pytorch 1.12
+- CUDA 11.6 or above
+
+
+### Set Up the Environment
+We recommend using Anaconda to manage the python environment:
+```
+conda create -n CALSA python=3.8
+conda activate CALSA
+conda install --yes -c pytorch pytorch=1.10.0 torchvision==0.11.1 cudatoolkit=11.3
+pip install -r requirements.txt
+conda install -c conda-forge ruamel_yaml
+```
+
+
+## Testing
+1. Download the pre-trained model checkpoint.<br>
+   🤗 Hugging Face: [PMMD Best Checkpoint](https://huggingface.co/zj-1/PMMD/tree/main)
+2. Modify test.sh to set your desired configuration.
+3. Run inference:
+```
+sh test.sh
 
 ### 🙏 Acknowledgements
 We sincerely thank the authors of [MultiModal-DeepFake](https://github.com/rshaojimmy/MultiModal-DeepFake) for their excellent work.  

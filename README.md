@@ -19,7 +19,7 @@
 
 
 <p align="center">
- <img src="./figs/framework.png" alt="CALS Framework Overview" width="800"/>
+ <img src="./fig/framework.png" alt="CALS Framework Overview" width="800"/>
 </p>
 
 ---

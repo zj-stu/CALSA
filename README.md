@@ -1,10 +1,10 @@
-# Multimodal Deepfake Detection via Coarse-Aware Localization Refinement and Semantic Alignment
+# Coarse-Aware Localization Refinement and Semantic Alignment for Multimodal Manipulation Detection
 
 ---
 
 ## 📖 Paper Overview
 
-**CALS** is a unified framework for **Detecting and Grounding Multi-modal Media Manipulations (DGM⁴)**. Our method addresses the challenging task of multimodal deepfake detection by jointly enhancing detection accuracy and localization precision across visual and textual modalities.
+**CALSA** is a unified framework for **Detecting and Grounding Multi-modal Media Manipulations (DGM⁴)**. Our method addresses the challenging task of multimodal deepfake detection by jointly enhancing detection accuracy and localization precision across visual and textual modalities.
 
 ### 🔍 Key Highlights
 

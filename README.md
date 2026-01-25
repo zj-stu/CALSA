@@ -11,7 +11,7 @@
 - **Guided Localization Refinement Module (GLRM):**  
  Enhances tampering region prediction by refining coarse localization cues without requiring multi-stage processing, improving spatial precision for pixel-level manipulation detection.
 
-- **Convolutionally Augmented Focused Transformer (CAFormer):**  
+- **Trace-aware Transformer (TraceFormer):**  
  A hybrid architecture that integrates multi-scale convolutional branches with Transformer-based global modeling, facilitating robust cross-modal feature fusion and comprehensive visual-textual understanding.
 
 - **Cross-Modal Semantic-Aware Alignment Mechanism (CSAM):**  

@@ -66,6 +66,7 @@ conda install -c conda-forge ruamel_yaml
 3. Run inference:
 ```
 sh test.sh
+```
 
 ### 🙏 Acknowledgements
 We sincerely thank the authors of [MultiModal-DeepFake](https://github.com/rshaojimmy/MultiModal-DeepFake) for their excellent work.  

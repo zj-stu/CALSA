@@ -12,26 +12,21 @@ from timm.models.layers import trunc_normal_, DropPath
 
 
 def spatial_apply(x, module, batch_size, keep_cls=True):
-    """通用维度转换函数"""
     if keep_cls:
         cls_token = x[:, :1]  # 保存CLS Token
         patches = x[:, 1:]
     else:
         patches = x
         
-    # 转换为2D特征图
     h = w = int(patches.shape[1]**0.5)
     feat_map = patches.permute(0,2,1).view(batch_size, -1, h, w)
     
-    # 应用USAM
     feat_map = module(feat_map)
     
-    # 转换回序列
     patches = feat_map.flatten(2).permute(0,2,1)
     return torch.cat([cls_token, patches], dim=1) if keep_cls else patches
 
 class USAMAdapter(nn.Module):
-    """适配器模块（处理维度转换）"""
     def __init__(self, dim):
         super().__init__()
         self.usam = USAM(kernel_size=3)
@@ -40,7 +35,6 @@ class USAMAdapter(nn.Module):
         return spatial_apply(x, self.usam, batch_size)
 
 
-# 修改后的USAM类
 class USAM(nn.Module):
     def __init__(self, kernel_size=3, padding=1, polish=True):
         super(USAM, self).__init__()
@@ -66,13 +60,12 @@ class USAM(nn.Module):
         att = F.relu(att)
 
         if self.polish:
-            # 创建边界mask
             B, C, H, W = att.shape
             mask = torch.ones((B, C, H, W), device=att.device)
-            mask[:, :, :, 0] = 0      # 左边界
-            mask[:, :, :, -1] = 0     # 右边界
-            mask[:, :, 0, :] = 0      # 上边界
-            mask[:, :, -1, :] = 0     # 下边界
+            mask[:, :, :, 0] = 0     
+            mask[:, :, :, -1] = 0    
+            mask[:, :, 0, :] = 0      
+            mask[:, :, -1, :] = 0     
             att = att * mask
 
         output = x + att * x
@@ -343,60 +336,27 @@ class VisionTransformer(nn.Module):
         B = x.shape[0]
         image = x
         x = self.patch_embed(x)#[8,256,768]
-        # x = spatial_apply(x, self.usam_pre, B, keep_cls=False)
-
-        # print('x.shape:',x.shape)
         cls_tokens = self.cls_token.expand(B, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
         x = torch.cat((cls_tokens, x), dim=1)
-        # print('x.shape:',x.shape)
         
         x = x + self.pos_embed[:,:x.size(1),:]
-        # print('x.shape:',x.shape)
 
         x = self.pos_drop(x)
-        # print('x.shape:',x.shape)
 
         for blk in self.blocks[0:8]:
             x = blk(x)
-      
-
         Fg2 = self.MHA2(x)
         Fl2 = self.Conv(image)
-        # Fg2 = self.MHA2(Fu1)
-        # Fl2 = self.Conv(Fl1)
         Fu2 = sum_feature(Fg2,Fl2,B)
-        for blk in self.blocks[8:12]:#加一下深度
+        for blk in self.blocks[8:12]:
             Fu2 = blk(Fu2)
             x = blk(x)
-        # x = self.MHA3(Fu2)
         fu = self.norm(Fu2)
         x = self.norm(x)
         
         return fu, x
 
-    # def forward(self, x, register_blk=-1):
-    #     B = x.shape[0]
-    #     image = x
-    #     x = self.patch_embed(x)#[8,256,768]
-    #     # x = spatial_apply(x, self.usam_pre, B, keep_cls=False)
-
-    #     # print('x.shape:',x.shape)
-    #     cls_tokens = self.cls_token.expand(B, -1, -1)  # stole cls_tokens impl from Phil Wang, thanks
-    #     x = torch.cat((cls_tokens, x), dim=1)
-    #     # print('x.shape:',x.shape)
-        
-    #     x = x + self.pos_embed[:,:x.size(1),:]
-    #     # print('x.shape:',x.shape)
-
-    #     x = self.pos_drop(x)
-    #     # print('x.shape:',x.shape)
-
-    #     for blk in self.blocks:
-    #         x = blk(x)
-      
-    #     x = self.norm(x)
-        
-    #     return x
+   
 
 def sum_feature(trans,cnn,B):
     cls_token = trans[:,0,:]

@@ -61,7 +61,7 @@ conda install -c conda-forge ruamel_yaml
 
 ## Testing
 1. Download the pre-trained model checkpoint.<br>
-   🤗 Hugging Face: [PMMD Best Checkpoint](https://huggingface.co/zj-1/PMMD/tree/main)
+   🤗 Hugging Face: [Checkpoint](https://huggingface.co/zj-1/checkpoint/tree/main)
 2. Modify test.sh to set your desired configuration.
 3. Run inference:
 ```
